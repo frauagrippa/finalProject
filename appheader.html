@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Roleplay Shit!</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="login.css"/>
+
+    
+    <script>
+        "use strict";
+    
+        $(document).ready(function(){
+        
+            $("#addimage_form").on("submit", function(e){
+                e.preventDefault();
+                $.ajax({
+                    url: $("#addimage_form").attr("action"),
+                    type: $("#addimage_form").attr("method"),
+                    dataType: "json",
+                    data: $("#addimage_form").serialize(),
+                    success: function (data) {
+                        console.log("success was " + data);
+                        window.location = data.redirect;
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("error was ");
+                        console.log(xhr);
+                        if(xhr.responseText) {
+                            var errorText = $.parseJSON(xhr.responseText).message;
+                            $("#addStatus").text(errorText);
+                        }
+                        else{
+                            $("#addStatus").text(error);
+                        }
+                    },
+                    cache: false
+                });
+            });
+        
+        
+            var notes;
+            var noteWidth = 0;
+            var noteHeight = 0;
+
+            notes = document.querySelectorAll(".note");
+            var w=window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+            var h=window.innerHeight|| document.documentElement.clientHeight|| document.body.clientHeight;
+            
+            noteWidth = w/8; 
+            noteHeight = h/4;
+            
+            createNotes();
+
+        
+            function createNotes()
+            {
+            
+                var frequency = .5;
+                for (var i = 0; i < notes.length; ++i)
+                {
+                
+                   var color = 0; 
+                   
+                   if(i % 2 == 0)
+                   {
+                        color  = Math.round(Math.sin(frequency*(i*2) + 0) * 38 + 78);
+                   }
+                   else
+                   {
+                        color  = Math.round(Math.cos(frequency*(i*2) + 0) * 38 + 78);
+                   }
+                   
+                   var rand = Math.floor(Math.random() * 12) * (Math.floor(Math.random() * 3) + 1);
+
+                   color = color + rand;
+                   
+                   notes[i].style.height = noteHeight + "px";
+                   notes[i].style.width = noteWidth + "px";
+                   notes[i].style.backgroundColor = "rgb(" + color + "," +color+ "," + color +")";  
+                   
+                }
+                
+                var images = document.querySelectorAll(".note img");
+                
+                for(var i = 0; i < images.length; i++)
+                {
+                    images[i].setAttribute("class", "");
+                }
+            }
+        
+        });
+    </script>
+	
+
+	
+</head>
+<body>
+	<header>
+		<h1>Welcome to Roleplaying Shit!</h1>
+	</header>
+
+    <section id="heading">
+	
+        <div id="info">
+            <form id="logout" action="logout.php" method="POST">
+                <input type="submit" value="Logout"/>
+            </form>
+        </div>
+    </section>
+    <section id="notes">
+		
+		<div id="column">
+			<div class="links">
+				<a href="">Upload Character Sheet</a><br>
+			</div>
+			
+			<div class="links">
+				<a href="">View/Edit Profile</a><br>
+			</div>
+			
+			<div class="links">
+				<a href="">Search Users</a><br>
+			</div>
+
+		</div>
+		
+		<div id="addimage">
+            <form id="addimage_form" action="app.php" method="POST">
+                <label for="url">Image URL:</label>
+                <input id="url" type="text" name="imageurl" placeholder="Enter Image URL"/>
+                <input type="submit" value="Add"/>
+            </form>
+            <h5 id="addStatus"></h5>
+        </div>
+		

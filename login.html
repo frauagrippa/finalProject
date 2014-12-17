@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="login.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            
+            $("#loginform").on("submit", function(e){
+                e.preventDefault();
+                
+                $.ajax({
+                    url: $("#loginform").attr("action"),
+                    type: $("#loginform").attr("method"),
+                    dataType: "json",
+                    data: $("#loginform").serialize(),
+                    success: function (data) {
+                        console.log(data);
+                        window.location = data.redirect;
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(xhr);
+                        if(xhr.responseText) {
+                            var errorText = $.parseJSON(xhr.responseText).message;
+                            $("#loginStatus").text(errorText);
+                        }
+                        else{
+                            $("#loginStatus").text(error);
+                        }
+                    },
+                    cache: false
+                });
+            });
+            
+            $("#createform").on("submit", function(e){
+                e.preventDefault();
+                
+                $.ajax({
+                    url: $("#createform").attr("action"),
+                    type: $("#createform").attr("method"),
+                    dataType: "json",
+                    data: $("#createform").serialize(),
+                    success: function (data) {
+                        console.log(data);
+                        window.location = data.redirect;
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(xhr);
+                        if(xhr.responseText) {
+                            var errorText = $.parseJSON(xhr.responseText).message;
+                            $("#createStatus").text(errorText);
+                        }
+                        else{
+                            $("#createStatus").text(error);
+                        }
+                    },
+                    cache: false
+                });
+            });
+        
+        });
+    </script>
+
+
+	
+</head>
+
+<body>
+	<header>
+		<h1>Welcome to Roleplaying Shit!</h1>
+	</header>
+
+    <section id="main">
+        <section id="login">
+            <h4>Login</h4>
+            <h5 id="loginStatus"></h5>
+            <form id="loginform" action="login.php" method="POST">
+                <div class="form_pair">
+                    <label>Username:</label>
+                    <input type="text" name="username" placeholder="Username"/>
+                </div>
+                <div class="form_pair">
+                    <label>Password:</label>
+                    <input type="password" name="pass" placeholder="Password"/>                
+                </div>
+                <div class="form_pair">
+                    <input name="submit" type="submit" value="Login"/>
+                </div>
+            </form>
+        </section>
+        <section id="create">
+            <h4>Create an Account</h4>
+            <h5 id="createStatus"></h5>
+            <form id="createform" action="create.php" method="POST">
+                <div class="form_pair">
+                        <label>Username:</label>
+                        <input type="text" name="username" placeholder="Enter username"/>
+                </div>
+                <div class="form_pair">
+                        <label>Password:</label>
+                        <input type="password" name="pass" placeholder="Enter password"/>  
+                </div>
+                <div class="form_pair">
+                        <label>Confirm:</label>
+                        <input type="password" name="confirm" placeholder="Confirm password"/>              
+                </div>
+                <div class="form_pair">
+                    <input name="submit" type="submit" value="Create"/>
+                </div>
+            </form>
+        </section>
+    </section>
+</body>
+</html>
